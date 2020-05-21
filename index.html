@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Dynamic Design 2</title>
+	
+	<style type="text/css">
+		body{
+			margin: 0;
+		}
+
+		.images, .images .image-container{
+		    width: 100vw;
+		    height: 100vh;
+		    position: fixed;
+		    top: 0;
+		    left: 0;
+		}
+
+		.images .image-container{
+			mix-blend-mode: difference;
+		}
+
+		.titles {
+		    position: fixed;
+		    color: white;
+		    columns: 6;
+		    width: 100%;
+		    font-size: 10px;
+		}
+
+		h2 {
+		    width: 100%;
+		    white-space: break-spaces;
+		    word-break: break-word;
+		}
+	</style>
+
+	<script type="text/javascript">
+
+	function random(min, max) {
+	  min = Math.ceil(min);
+	  max = Math.floor(max);
+	  return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive 
+	}
+
+	function getRandomColor() {
+	  var letters = '0123456789ABCDEF';
+	  var color = '#';
+	  for (var i = 0; i < 6; i++) {
+	    color += letters[Math.floor(Math.random() * 16)];
+	  }
+	  return color;
+	}
+
+
+	const onPageLoad = async () => {
+		const API_URL = "https://dp.isiaurbino.net/api/x-publishing/workshop-coding/alessandro/cover?limit=100";
+
+	const res = await fetch(API_URL).then(r => r.json());	
+
+
+	const blendingModes = [
+			"normal", 
+			"multiply",
+			"screen",
+			"overlay",
+			"darken",
+			"lighten",
+			"color-dodge",
+			"color-burn",
+			"difference",
+			"exclusion",
+			"hue",
+			"saturation",
+			"color",
+			"luminosity",
+	];
+
+
+	const listOfSafewWebFonts = [
+		"Arial",
+		"Verdana",
+		"Trebuchet MS",
+		"Times New Roman",
+		"Didot",
+		"American Typewriter",
+		"Andale Mono",
+		"Courier",
+		"Bradley Hand",
+		"Luminari"
+	];
+
+
+
+
+	const imagesContainer = document.querySelector(".images");
+	const titlesContainer = document.querySelector(".titles");
+
+
+	res.data.forEach(imageFIle => {
+
+		const imgContainer = document.createElement("div");
+		imgContainer.className = "image-container";
+
+		const imageUrl = imageFIle.content.responsiveUrls[2] + ".jpg";
+
+		imgContainer.style.background = "url(" + imageUrl + ")";
+		imgContainer.style.backgroundRepeat = "no-repeat";
+		imgContainer.style.backgroundSize = "cover";
+
+		const title = document.createElement("h2");
+		title.innerText = imageFIle.content.title;
+		title.style.fontFamily = listOfSafewWebFonts[ random(0, listOfSafewWebFonts.length) ];
+		title.style.fontSize = random(8, 20) + "px";
+		title.style.marginTop = random(1, 4) + "em"
+
+	
+		imagesContainer.append(imgContainer);
+		titlesContainer.append(title);
+
+	})
+
+	const allImageElements = document.querySelectorAll(".image-container");
+	const alltitleElements = document.querySelectorAll("h2");
+
+
+	function changeTheImage(){
+		for(let i=0; i < allImageElements.length; i++){
+			const imageWrapper = allImageElements[i];
+			imageWrapper.style.opacity = Math.random();
+		}
+	}
+
+	function changeTheTitle(){
+		for(let i=0; i < alltitleElements.length; i++){
+			const title = alltitleElements[i];
+			title.style.fontFamily = listOfSafewWebFonts[ random(0, listOfSafewWebFonts.length) ];
+			title.style.fontSize = random(8, 20) + "px";
+			title.style.marginTop = random(1, 4) + "em"
+		}
+	}
+
+	window.onmousemove = () => {
+	}
+
+	window.onclick = () => {
+		changeTheImage()
+	}
+
+	setInterval(() => {
+		changeTheImage();
+		changeTheTitle();
+	}, 100)
+
+
+	}
+
+	window.onload = onPageLoad;		
+</script>
+</head>
+<body>
+
+	<div class="images"></div>
+	<div class="titles"></div>
+
+</body>
+</html>
